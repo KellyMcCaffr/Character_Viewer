@@ -36,7 +36,7 @@ android {
             applicationIdSuffix = ".simpsonsviewer"
             dimension "show"
             resValue "string", "app_name", "Simpsons Character Viewer"
-            buildConfigField "String", "data_api", '"http://api.duckduckgo.com/?q=simpsons+characters&format=json"'
+            buildConfigField "String", "data_api", '"https://api.duckduckgo.com/?q=simpsons+characters&format=json"'
             versionCode 1
             versionName "1.0"
         }
@@ -44,7 +44,7 @@ android {
             applicationIdSuffix = ".wireviewer"
             dimension "show"
             resValue "string", "app_name", "The Wire Character Viewer"
-            buildConfigField "String", "data_api", '"http://api.duckduckgo.com/?q=the+wire+characters&format=json"'
+            buildConfigField "String", "data_api", '"https://api.duckduckgo.com/?q=the+wire+characters&format=json"'
             versionCode 1
             versionName "1.0"
         }
@@ -57,6 +57,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.6.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.google.code.gson:gson:2.8.2'
     testImplementation 'junit:junit:5.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
