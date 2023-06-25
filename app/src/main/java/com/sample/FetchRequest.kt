@@ -5,6 +5,8 @@ import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonParseException
 import com.google.gson.JsonParser
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -16,13 +18,12 @@ import java.util.ArrayList
 
 object FetchRequest {
 
-    fun fetchCountries(
+    /*fun fetchCharacters(
         url: String,
         context: Context
-    ) {
-        GlobalScope.launch(Dispatchers.Main) {
+    ): Observable<List<CharacterItem>> {
+        return Observable.fromCallable(GlobalScope.launch(Dispatchers.Main) {
             withContext(Dispatchers.IO){
-
                 val inputStream:InputStream
 
                 val connection:HttpURLConnection = URL(url).openConnection() as HttpURLConnection
@@ -31,13 +32,17 @@ object FetchRequest {
 
                 inputStream = connection.inputStream
 
+                var countryItems = listOf<CharacterItem>()
                 if(inputStream != null) {
-                    val countryItems: List<CharacterItem> = getItemListFromStream(inputStream)
+                    countryItems = getItemListFromStream(inputStream)
                     Log.e("435345","Here is country items list: " + countryItems)
-                    //(context as MainActivity).setViewsToCountryList(countryItems)
+                    return@withContext Observable.just(countryItems)
+                    //return(context as MainActivity).setViewsToCountryList(countryItems)
+                } else {
+                    return@withContext Observable.just(countryItems)
                 }
             }
-        }
+        })
     }
 
     private fun getItemListFromStream(
@@ -68,5 +73,5 @@ object FetchRequest {
         }
 
         return result.toList()
-    }
+    }*/
 }
