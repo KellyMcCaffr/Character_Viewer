@@ -40,12 +40,9 @@ class CharactersViewModel {
         val result: ArrayList<CharacterItem> = ArrayList()
         try {
             val jsonArray = dataObject.get(context.getString(R.string.response_key_related_topics)) as JsonArray
-            Log.e("435534","Here is character json array size: " + jsonArray.size())
             val gson = Gson()
             var c = 0
             while (c < jsonArray.size()) {
-                Log.e("435534","Added item at position: " + c)
-                Log.e("435345","Here is name added: " + convertResponseItem(getCharacterItemAtPosition(jsonArray, c, gson), context).name)
                 result.add(convertResponseItem(getCharacterItemAtPosition(jsonArray, c, gson), context))
                 c++
             }

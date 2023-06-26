@@ -1,5 +1,6 @@
 <resources>
 
+    <string name ="search_edit_text_hint">Filter by text</string>
     <string name ="response_key_related_topics">RelatedTopics</string>
     <string name ="response_key_icon_width">Width</string>
     <string name ="response_key_icon_height">Height</string>
