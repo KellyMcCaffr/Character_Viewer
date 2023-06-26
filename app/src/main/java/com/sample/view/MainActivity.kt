@@ -2,6 +2,7 @@ package com.sample.view
 
 import android.content.Context
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.view.View
 import android.widget.EditText
@@ -28,7 +29,12 @@ class MainActivity : AppCompatActivity() {
         compositeDisposable = CompositeDisposable()
         viewModel = CharactersViewModel()
         initViews()
-        loadCharacterData()
+        val list = cachedCharacterList
+        if (list == null || list.isEmpty()) {
+            loadCharacterData()
+        } else {
+            displayCharacterData(list)
+        }
     }
 
     private fun initViews() {
@@ -52,11 +58,17 @@ class MainActivity : AppCompatActivity() {
             LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = recyclerViewLayoutManager
         recyclerView.adapter = CharacterAdapter(this, characterList)
+        // Save for restore on rotate
+        cachedCharacterList = characterList
     }
 
     override fun onDestroy() {
         compositeDisposable.clear()
         super.onDestroy()
+    }
+
+    companion object {
+        var cachedCharacterList: List<CharacterItem>? = null
     }
 
     class Callback {
