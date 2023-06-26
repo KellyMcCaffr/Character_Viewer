@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
-class EndpointsImpl: Endpoints{
+class RequestApiImpl: RequestApi{
 
     @Override
     override fun getCharacterList(): Observable<JsonObject> {
@@ -15,7 +15,7 @@ class EndpointsImpl: Endpoints{
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .build()
-        val apiService: Endpoints = retrofit.create(Endpoints::class.java)
+        val apiService: RequestApi = retrofit.create(RequestApi::class.java)
         return apiService.getCharacterList()
     }
 }

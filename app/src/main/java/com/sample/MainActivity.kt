@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
 
     class Callback {
         fun onCharacterListLoaded(
-            responseList: List<ResponseItem>
+            responseList: List<CharacterItem>
         ) {
             Log.e("435534","Here is character list passed to main activity: " + responseList)
         }
