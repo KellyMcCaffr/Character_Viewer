@@ -1,14 +1,12 @@
 package com.sample
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.util.Log
-import com.google.gson.Gson
-import com.google.gson.JsonArray
-import com.google.gson.JsonParseException
-import com.google.gson.JsonParser
+import com.google.gson.*
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import java.util.ArrayList
+import java.util.*
 
 class CharactersViewModel {
 
@@ -23,23 +21,7 @@ class CharactersViewModel {
                 .subscribeOn(Schedulers.io())
                 .subscribe(
                     {
-                        Log.e("454545","Here is json object returned for check:: " + it)
-                        val result: ArrayList<CharacterItem> = ArrayList()
-                        try {
-                            val jsonArray = it.get(context.getString(R.string.character_response_related_topics)) as JsonArray
-                            val gson = Gson()
-                            var c = 0
-                            while (c < jsonArray.size()) {
-                                val jsonElement = JsonParser().parse(jsonArray.get(c).toString())
-                                Log.e("34234","Here is JSON element from array: " + jsonElement)
-                                val countryItem = gson.fromJson(jsonElement, CharacterItem::class.java)
-                                result.add(countryItem)
-                                c++
-                            }
-                        } catch (e: JsonParseException) {
-                            Log.e("435534","Json parse exception occurred: " + e)
-                        }
-                        callback.onCharacterListLoaded(result)
+                        processCharacterData(it, callback, context)
                     },
                     {
                         Log.e("434435","Load characters failed with error: " + it)
@@ -47,4 +29,57 @@ class CharactersViewModel {
                 )
         )
     }
+
+    private fun processCharacterData(
+        dataObject: JsonObject,
+        callback: MainActivity.Callback,
+        context: Context
+    ) {
+        val result: ArrayList<ResponseItem> = ArrayList()
+        try {
+            val jsonArray = dataObject.get(context.getString(R.string.character_response_related_topics)) as JsonArray
+            val gson = Gson()
+            var c = 0
+            while (c < jsonArray.size()) {
+                result.add(convertResponseItem(getCharacterItemAtPosition(jsonArray, c, gson)))
+                c++
+            }
+        } catch (e: JsonParseException) {
+            Log.e("435534","Json parse exception occurred: " + e)
+        }
+        callback.onCharacterListLoaded(result)
+    }
+
+    private fun getCharacterItemAtPosition(
+        array: JsonArray,
+        position: Int,
+        gson: Gson
+    ): ResponseItem {
+        val jsonElement = JsonParser().parse(array.get(position).toString())
+        return gson.fromJson(jsonElement, ResponseItem::class.java)
+    }
+
+    private fun convertResponseItem(
+        item: ResponseItem
+    ): ResponseItem {
+        val text = item.Text ?: ""
+        val characterName = text.subSequence(0, text.indexOf('-') - 1)
+        val characterDescription = text.subSequence(text.indexOf('-') + 2, text.length)
+        Log.e("353545","Here is character name retrieved: " + characterName)
+        Log.e("353545","Here is character description retrieved: " + characterDescription)
+        //return CharacterItem("", null, )
+        return item
+    }
+
+    /*private fun getImageFromIconObject(
+        iconObject: HashMap<String, String>
+    ): Drawable {
+
+    }*/
 }
+
+
+
+
+
+

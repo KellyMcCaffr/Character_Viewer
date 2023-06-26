@@ -23,9 +23,9 @@ class MainActivity : AppCompatActivity() {
 
     class Callback {
         fun onCharacterListLoaded(
-            characterList: List<CharacterItem>
+            responseList: List<ResponseItem>
         ) {
-            Log.e("435534","Here is character list passed to main activity: " + characterList)
+            Log.e("435534","Here is character list passed to main activity: " + responseList)
         }
     }
 }

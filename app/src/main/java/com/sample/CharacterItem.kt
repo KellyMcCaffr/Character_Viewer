@@ -1,9 +1,9 @@
 package com.sample
 
-import java.util.HashMap
+import android.graphics.drawable.Drawable
 
 data class CharacterItem internal constructor(
-    var FirstURL: String?,
-    var Icon: HashMap<String, String>?,
-    var Result: String?
+    val name: String,
+    val image: Drawable,
+    val description: String
 )
