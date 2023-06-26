@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var progressBar: ProgressBar
     lateinit var searchEditText: EditText
     lateinit var recyclerView: RecyclerView
+    val callback: Callback = Callback()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         compositeDisposable = CompositeDisposable()
         viewModel = CharactersViewModel()
         initViews()
-        Log.e("453345","Is device tablet?: " + Utils.getScreenIsTablet(this))
+        Log.e("453345","Is device tablet?: " + Utils.getDeviceIsTablet(this))
         val list = cachedCharacterList
         if (list == null || list.isEmpty()) {
             loadCharacterData()
@@ -46,7 +47,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadCharacterData() {
         progressBar.visibility = View.VISIBLE
-        viewModel.loadCharacterData(Callback(), compositeDisposable, this)
+        viewModel.loadCharacterData(callback, compositeDisposable, this)
     }
 
     fun displayCharacterData(
@@ -58,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         val recyclerViewLayoutManager = LinearLayoutManager(this@MainActivity,
             LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = recyclerViewLayoutManager
-        recyclerView.adapter = CharacterAdapter(this, characterList)
+        recyclerView.adapter = CharacterAdapter(characterList, callback, this)
         // Save for restore on rotate
         cachedCharacterList = characterList
     }
@@ -73,6 +74,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     class Callback {
+
         fun onCharacterListLoaded(
             characterList: List<CharacterItem>,
             context: Context
@@ -80,6 +82,20 @@ class MainActivity : AppCompatActivity() {
             (context as MainActivity).apply {
                 runOnUiThread {
                     displayCharacterData(characterList)
+                }
+            }
+        }
+
+        fun onCharacterItemClicked(
+            item: CharacterItem,
+            context: Context
+        ) {
+            (context as MainActivity).apply {
+                runOnUiThread {
+                    val isTablet = Utils.getDeviceIsTablet(context)
+                    if (!isTablet) {
+                        Utils.openCharacterDetailScreen(context)
+                    }
                 }
             }
         }

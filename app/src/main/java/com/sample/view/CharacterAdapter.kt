@@ -3,7 +3,6 @@ package com.sample.view
 import com.sample.R
 import com.sample.mvm.CharacterItem
 import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -12,9 +11,15 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 
-class CharacterAdapter internal constructor(context: Context?, data: List<CharacterItem>) : RecyclerView.Adapter<CharacterAdapter.ViewHolder>() {
-    private val characterInfoList: List<CharacterItem> = data
+class CharacterAdapter internal constructor(
+    data: List<CharacterItem>,
+    callback: MainActivity.Callback,
+    context: Context?
+) : RecyclerView.Adapter<CharacterAdapter.ViewHolder>() {
+    private val characterInfoList = data
     private val inflater: LayoutInflater = LayoutInflater.from(context)
+    private val context = context
+    private val callback = callback
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = inflater.inflate(R.layout.full_character_item, parent, false)
         return ViewHolder(view)
@@ -25,7 +30,9 @@ class CharacterAdapter internal constructor(context: Context?, data: List<Charac
         holder.apply {
             nameTextView.text = character.name
             itemView.setOnClickListener {
-                onItemClicked(position)
+                if (context != null) {
+                    callback.onCharacterItemClicked(character, context)
+                }
             }
             outerCardView.setOnTouchListener(
                 View.OnTouchListener(){
@@ -52,10 +59,8 @@ class CharacterAdapter internal constructor(context: Context?, data: List<Charac
         return characterInfoList.size
     }
 
-    private fun onItemClicked(
-        position: Int
-    ) {
-
+    private fun openDetailScreen() {
+        //val intent = Inten()
     }
 
     inner class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {

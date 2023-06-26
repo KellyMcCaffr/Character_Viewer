@@ -1,13 +1,22 @@
 package com.sample
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.util.Pair
+import com.sample.view.DetailActivity
 import java.util.HashMap
 
 object Utils {
 
-    fun getScreenIsTablet(
+    fun openCharacterDetailScreen(
+        context: Context
+    ) {
+        val intent = Intent(context, DetailActivity::class.java)
+        context.startActivity(intent)
+    }
+
+    fun getDeviceIsTablet(
         context: Context
     ): Boolean {
         // Code copied from https://www.geeksforgeeks.org/how-to-detect-tablet-or-phone-in-android-programmatically/
