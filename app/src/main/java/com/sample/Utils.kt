@@ -7,10 +7,27 @@ import java.util.HashMap
 
 object Utils {
 
-    fun getScreenIsPortrait(
+    fun getScreenIsTablet(
         context: Context
     ): Boolean {
-        return context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        // Code copied from https://www.geeksforgeeks.org/how-to-detect-tablet-or-phone-in-android-programmatically/
+        return (context.resources.configuration.screenLayout and
+            Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_LARGE)
+                && getDevice5Inch(context)
+
+    }
+
+    private fun getDevice5Inch(context: Context): Boolean {
+        // Code copied from https://www.geeksforgeeks.org/how-to-detect-tablet-or-phone-in-android-programmatically/
+        return try {
+            val displayMetrics = context.resources.displayMetrics
+            val yinch = displayMetrics.heightPixels / displayMetrics.ydpi
+            val xinch = displayMetrics.widthPixels / displayMetrics.xdpi
+            val diagonalinch = Math.sqrt((xinch * xinch + yinch * yinch).toDouble())
+            diagonalinch >= Constants.TABLET_CHECK_DIAGONAL
+        } catch (e: Exception) {
+            false
+        }
     }
 
     fun getImageWidthHeight(

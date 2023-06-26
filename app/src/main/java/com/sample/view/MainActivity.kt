@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sample.R
+import com.sample.Utils
 import com.sample.mvm.CharacterItem
 import com.sample.mvm.CharactersViewModel
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         compositeDisposable = CompositeDisposable()
         viewModel = CharactersViewModel()
         initViews()
+        Log.e("453345","Is device tablet?: " + Utils.getScreenIsTablet(this))
         val list = cachedCharacterList
         if (list == null || list.isEmpty()) {
             loadCharacterData()
@@ -75,10 +77,6 @@ class MainActivity : AppCompatActivity() {
             characterList: List<CharacterItem>,
             context: Context
         ) {
-            Log.e("435534","Here is character list length: " + characterList.size)
-            for (item in characterList) {
-                Log.e("45534435","Here is final character item: " + item)
-            }
             (context as MainActivity).apply {
                 runOnUiThread {
                     displayCharacterData(characterList)
