@@ -32,14 +32,14 @@ android {
     }
     flavorDimensions "show"
     defaultConfig {
-        buildConfigField "String", "DATA_API_BASE_URL", '"https://api.duckduckgo.com/?q="'
+        buildConfigField "String", "DATA_API_BASE_URL", '"https://api.duckduckgo.com/"'
     }
     productFlavors {
         create("simpsons") {
             applicationIdSuffix = ".simpsonsviewer"
             dimension "show"
             resValue "string", "app_name", "Simpsons Character Viewer"
-            buildConfigField "String", "DATA_API_SUFFIX", '"simpsons+characters&format=json"'
+            buildConfigField "String", "DATA_API_SUFFIX", '"?q=simpsons+characters&format=json"'
             versionCode 1
             versionName "1.0"
         }
@@ -47,7 +47,7 @@ android {
             applicationIdSuffix = ".wireviewer"
             dimension "show"
             resValue "string", "app_name", "The Wire Character Viewer"
-            buildConfigField "String", "DATA_API_SUFFIX", '"the+wire+characters&format=json"'
+            buildConfigField "String", "DATA_API_SUFFIX", '"?q=the+wire+characters&format=json"'
             versionCode 1
             versionName "1.0"
         }
