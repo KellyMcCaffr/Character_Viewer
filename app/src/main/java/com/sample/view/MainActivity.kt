@@ -7,6 +7,8 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.sample.R
 import com.sample.mvm.CharacterItem
 import com.sample.mvm.CharactersViewModel
@@ -18,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var viewModel: CharactersViewModel
     lateinit var progressBar: ProgressBar
     lateinit var searchEditText: EditText
+    lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     private fun initViews() {
         progressBar = findViewById(R.id.progressBar)
         searchEditText = findViewById(R.id.searchEditText)
+        recyclerView = findViewById(R.id.characterRecyclerView)
     }
 
     private fun loadCharacterData() {
@@ -43,6 +47,11 @@ class MainActivity : AppCompatActivity() {
     ) {
         searchEditText.visibility = View.VISIBLE
         progressBar.visibility = View.GONE
+        recyclerView.visibility = View.VISIBLE
+        val recyclerViewLayoutManager = LinearLayoutManager(this@MainActivity,
+            LinearLayoutManager.VERTICAL, false)
+        recyclerView.layoutManager = recyclerViewLayoutManager
+        recyclerView.adapter = CharacterAdapter(this, characterList)
     }
 
     override fun onDestroy() {

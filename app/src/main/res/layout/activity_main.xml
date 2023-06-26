@@ -20,4 +20,16 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"/>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/characterRecyclerView"
+        android:scrollbars="vertical"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        android:layout_below="@+id/searchEditText"/>
+
+
 </RelativeLayout>
