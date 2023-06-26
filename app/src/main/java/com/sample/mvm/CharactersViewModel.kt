@@ -93,7 +93,6 @@ class CharactersViewModel {
         context: Context
     ): Bitmap {
         val imageUrl = iconObject?.get(context.getString(R.string.response_key_icon_url)) ?: ""
-        //Log.e("45354534", "Here is image url found: " + imageUrl)
         var bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.default_character_image)
         if (imageUrl.isNotEmpty()) {
             try {
