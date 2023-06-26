@@ -38,27 +38,21 @@ class CharactersViewModel {
         val result: ArrayList<CharacterItem> = ArrayList()
         try {
             val jsonArray = dataObject.get(context.getString(R.string.response_key_related_topics)) as JsonArray
+            Log.e("435534","Here is character json array size: " + jsonArray.size())
             val gson = Gson()
             var c = 0
             while (c < jsonArray.size()) {
+                Log.e("435534","Added item at position: " + c)
+                Log.e("435345","Here is name added: " + convertResponseItem(getCharacterItemAtPosition(jsonArray, c, gson), context).name)
                 result.add(convertResponseItem(getCharacterItemAtPosition(jsonArray, c, gson), context))
                 c++
             }
         } catch (e: JsonParseException) {
             Log.e("435534", "Json parse exception occurred: " + e)
-        } catch (e: StringIndexOutOfBoundsException) { }
+        }  catch (e: StringIndexOutOfBoundsException) {
+            Log.e("435534", "String out of bounds exception occurred: " + e)
+        }
         callback.onCharacterListLoaded(result)
-    }
-
-    private fun getCharacterItemAtPosition(
-        array: JsonArray,
-        position: Int,
-        gson: Gson
-    ): ResponseItem {
-        //Log.e("453543","Item retrieved at position: " + position)
-        //Log.e("453543","Array size is: " + array.size())
-        val jsonElement = JsonParser().parse(array.get(position).toString())
-        return gson.fromJson(jsonElement, ResponseItem::class.java)
     }
 
     private fun convertResponseItem(
@@ -66,7 +60,6 @@ class CharactersViewModel {
         context: Context
     ):  CharacterItem {
         val text = item.Text ?: ""
-        val characterName = text.subSequence(0, text.indexOf('-') - 1).toString()
         val characterDescription = text.subSequence(text.indexOf('-') + 2, text.length).toString()
         //val characterImage = getBitmapFromIconObject(item.Icon, item.FirstURL ?: "", context)
         //Log.e("353545", "Here is character name retrieved: " + characterName)
@@ -91,7 +84,30 @@ class CharactersViewModel {
         } else {
             Integer.parseInt(iconObject[heightKey] ?: defaultHeightString)
         }
-        return CharacterItem(characterName, characterDescription, imageWidth, imageHeight, imageUrl)
+        return CharacterItem(getCharacterName(text), characterDescription, imageWidth, imageHeight, imageUrl)
+    }
+
+    private fun getCharacterName(
+        text: String
+    ): String {
+        val characterName = text.subSequence(0, text.indexOf('-') - 1).toString()
+        val indexOfParenthesisStart = characterName.indexOf('(')
+        return if (indexOfParenthesisStart == -1 || indexOfParenthesisStart == 0) {
+            characterName
+        } else {
+            characterName.subSequence(0, indexOfParenthesisStart - 1).toString()
+        }
+    }
+
+    private fun getCharacterItemAtPosition(
+        array: JsonArray,
+        position: Int,
+        gson: Gson
+    ): ResponseItem {
+        //Log.e("453543","Item retrieved at position: " + position)
+        //Log.e("453543","Array size is: " + array.size())
+        val jsonElement = JsonParser().parse(array.get(position).toString())
+        return gson.fromJson(jsonElement, ResponseItem::class.java)
     }
 
     /*private fun getBitmapFromIconObject(

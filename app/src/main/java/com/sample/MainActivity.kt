@@ -26,6 +26,10 @@ class MainActivity : AppCompatActivity() {
             responseList: List<CharacterItem>
         ) {
             Log.e("435534","Here is character list passed to main activity: " + responseList)
+            Log.e("435534","Here is character list length: " + responseList.size)
+            for (item in responseList) {
+                Log.e("45534435","Here is final character item: " + item)
+            }
         }
     }
 }
