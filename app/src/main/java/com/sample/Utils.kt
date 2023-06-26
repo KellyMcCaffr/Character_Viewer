@@ -4,15 +4,19 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.util.Pair
+import com.sample.mvm.CharacterItem
 import com.sample.view.DetailActivity
 import java.util.HashMap
 
 object Utils {
 
     fun openCharacterDetailScreen(
+        item: CharacterItem,
         context: Context
     ) {
         val intent = Intent(context, DetailActivity::class.java)
+        val itemKey = context.getString(R.string.character_item_extra_key)
+        intent.putExtra(itemKey, item)
         context.startActivity(intent)
     }
 

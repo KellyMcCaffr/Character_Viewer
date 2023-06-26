@@ -64,6 +64,16 @@ class MainActivity : AppCompatActivity() {
         cachedCharacterList = characterList
     }
 
+    fun handleCharacterItemClick(
+        item: CharacterItem,
+        context: Context
+    ) {
+        val isTablet = Utils.getDeviceIsTablet(context)
+        if (!isTablet) {
+            Utils.openCharacterDetailScreen(item, context)
+        }
+    }
+
     override fun onDestroy() {
         compositeDisposable.clear()
         super.onDestroy()
@@ -92,10 +102,7 @@ class MainActivity : AppCompatActivity() {
         ) {
             (context as MainActivity).apply {
                 runOnUiThread {
-                    val isTablet = Utils.getDeviceIsTablet(context)
-                    if (!isTablet) {
-                        Utils.openCharacterDetailScreen(context)
-                    }
+                    handleCharacterItemClick(item, context)
                 }
             }
         }
