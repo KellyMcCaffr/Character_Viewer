@@ -1,12 +1,13 @@
-package com.sample
+package com.sample.mvm
 
 import com.google.gson.JsonObject
+import com.sample.BuildConfig
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
-class RequestApiImpl: RequestApi{
+class RequestApiImpl: RequestApi {
 
     @Override
     override fun getCharacterList(): Observable<JsonObject> {

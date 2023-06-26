@@ -1,4 +1,4 @@
-package com.sample
+package com.sample.mvm
 
 data class CharacterItem internal constructor(
     val name: String,

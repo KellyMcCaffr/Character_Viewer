@@ -1,12 +1,14 @@
-package com.sample
+package com.sample.mvm
 
 import android.content.Context
 import android.util.Log
 import com.google.gson.*
+import com.sample.R
+import com.sample.Utils
+import com.sample.view.MainActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.ArrayList
-import java.util.HashMap
 
 class CharactersViewModel {
 
@@ -52,39 +54,19 @@ class CharactersViewModel {
         }  catch (e: StringIndexOutOfBoundsException) {
             Log.e("435534", "String out of bounds exception occurred: " + e)
         }
-        callback.onCharacterListLoaded(result)
+        callback.onCharacterListLoaded(result, context)
     }
 
     private fun convertResponseItem(
         item: ResponseItem,
         context: Context
-    ):  CharacterItem {
+    ): CharacterItem {
         val text = item.Text ?: ""
         val characterDescription = text.subSequence(text.indexOf('-') + 2, text.length).toString()
-        //val characterImage = getBitmapFromIconObject(item.Icon, item.FirstURL ?: "", context)
-        //Log.e("353545", "Here is character name retrieved: " + characterName)
-        //Log.e("353545", "Here is character description retrieved: " + characterDescription)
-        //return CharacterItem("", null, )
-        val widthKey = context.getString(R.string.response_key_icon_width)
-        val heightKey = context.getString(R.string.response_key_icon_height)
-        val defaultWidthString = context.getString(R.string.character_image_width_default_value)
-        val defaultHeightString = context.getString(R.string.character_image_height_default_value)
-        val iconObject: HashMap<String, String>? = item.Icon
-        val imageUrl = iconObject?.get(context.getString(R.string.response_key_icon_url)) ?: ""
-        val imageWidth = if (iconObject == null || !iconObject.containsKey(widthKey) ||
-            iconObject[widthKey] == null || iconObject[widthKey]?.length == 0
-        ) {
-            Integer.parseInt(defaultWidthString)
-        } else {
-            Integer.parseInt(iconObject[widthKey] ?: defaultWidthString)
-        }
-        val imageHeight = if (iconObject == null || !iconObject.containsKey(heightKey) ||
-            iconObject[heightKey] == null || iconObject[heightKey]?.length == 0) {
-            Integer.parseInt(defaultHeightString)
-        } else {
-            Integer.parseInt(iconObject[heightKey] ?: defaultHeightString)
-        }
-        return CharacterItem(getCharacterName(text), characterDescription, imageWidth, imageHeight, imageUrl)
+        val imageWidthHeight = Utils.getImageWidthHeight(item.Icon, context)
+        val imageUrl = item.Icon?.get(context.getString(R.string.response_key_icon_url)) ?: ""
+        return CharacterItem(getCharacterName(text), characterDescription, imageWidthHeight.first,
+            imageWidthHeight.second, imageUrl)
     }
 
     private fun getCharacterName(
@@ -104,8 +86,6 @@ class CharactersViewModel {
         position: Int,
         gson: Gson
     ): ResponseItem {
-        //Log.e("453543","Item retrieved at position: " + position)
-        //Log.e("453543","Array size is: " + array.size())
         val jsonElement = JsonParser().parse(array.get(position).toString())
         return gson.fromJson(jsonElement, ResponseItem::class.java)
     }
