@@ -9,7 +9,7 @@
     app:cardBackgroundColor="@color/white"
     app:cardUseCompatPadding="true"
     app:cardCornerRadius="5dp"
-    app:cardElevation="5dp"
+    app:cardElevation="@dimen/standard_view_elevation"
     android:orientation="vertical"
     android:layout_centerVertical="true">
 

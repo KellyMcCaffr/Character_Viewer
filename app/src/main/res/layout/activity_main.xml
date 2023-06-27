@@ -16,7 +16,8 @@
         android:background="@color/white"
         android:visibility="gone"
         android:padding="10dp"
-        android:layout_margin="10dp"/>
+        android:layout_margin="10dp"
+        android:elevation="@dimen/standard_view_elevation"/>
 
     <ProgressBar
         android:id="@+id/progressBar"
