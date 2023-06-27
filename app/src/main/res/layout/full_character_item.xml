@@ -30,22 +30,24 @@
             android:id="@+id/nameTextView"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:textColor="@color/black"
+            android:textColor="@color/title_text_color"
             android:textSize="22sp"
+            android:textStyle="bold"
             android:gravity="center"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/imageView"
-            android:visibility="gone" />
+            android:visibility="gone"/>
         <TextView
             android:id="@+id/descriptionTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
+            android:textColor="@color/description_text_color"
             android:textSize="18sp"
             android:gravity="center"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/nameTextView"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:padding="20dp"/>
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>
