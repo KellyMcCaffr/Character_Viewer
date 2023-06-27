@@ -41,17 +41,24 @@
             android:layout_below="@+id/nameTextView"
             android:visibility="gone"/>
 
-        <TextView
-            android:id="@+id/descriptionTextView"
+        <ScrollView
+            android:id="@+id/descriptionWrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/description_text_color"
-            android:textSize="18sp"
-            android:gravity="center"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/characterImageView"
-            android:visibility="gone"
-            android:padding="10dp"/>
+            android:orientation="vertical"
+            android:layout_below="@+id/characterImageView">
+            <TextView
+                android:id="@+id/descriptionTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/description_text_color"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone"
+                android:padding="10dp"/>
+        </ScrollView>
+
     </RelativeLayout>
 
     <RelativeLayout

@@ -13,8 +13,6 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
-import java.util.*
 
 class CharacterAdapter internal constructor(
     data: List<CharacterItem>,
@@ -43,7 +41,12 @@ class CharacterAdapter internal constructor(
             }
             itemView.setOnClickListener {
                 if (context != null) {
-                    callback.onCharacterItemClicked(character, context)
+                    val isTablet = ViewUtils.getDeviceIsTablet(context)
+                    if (!isTablet) {
+                        callback.onCharacterItemClickedNonTablet(character, context)
+                    } else {
+                        showTabletDetailViews(holder, character)
+                    }
                 }
             }
             outerCardView.setOnTouchListener(
@@ -65,6 +68,23 @@ class CharacterAdapter internal constructor(
                 }
             )
         }
+    }
+
+    private fun showTabletDetailViews(
+        holder: ViewHolder,
+        characterItem: CharacterItem
+    ) {
+        holder.descriptionTextView.visibility = View.VISIBLE
+        holder.characterImageView.visibility = View.VISIBLE
+        holder.possibleCharacterImageWrapper.visibility = View.VISIBLE
+        holder.descriptionTextView.text = characterItem.description
+        ViewUtils.displayCharacterImageFromUrlAndAdjustBounds(
+            characterItem.imageWidth,
+            characterItem.imageHeight,
+            characterItem.imageUrl,
+            holder.characterImageView,
+            context
+        )
     }
 
     override fun getItemCount(): Int {

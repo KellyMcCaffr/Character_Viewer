@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var progressBar: ProgressBar
     lateinit var searchEditText: EditText
     lateinit var recyclerView: RecyclerView
+    lateinit var adapter: CharacterAdapter
     val callback: Callback = Callback()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,19 +57,10 @@ class MainActivity : AppCompatActivity() {
         val recyclerViewLayoutManager = LinearLayoutManager(this@MainActivity,
             LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = recyclerViewLayoutManager
-        recyclerView.adapter = CharacterAdapter(characterList, callback, this)
+        adapter = CharacterAdapter(characterList, callback, this)
+        recyclerView.adapter = adapter
         // Save for restore on rotate
         cachedCharacterList = characterList
-    }
-
-    fun handleCharacterItemClick(
-        item: CharacterItem,
-        context: Context
-    ) {
-        val isTablet = ViewUtils.getDeviceIsTablet(context)
-        if (!isTablet) {
-            ViewUtils.openCharacterDetailScreen(item, context)
-        }
     }
 
     override fun onDestroy() {
@@ -93,13 +85,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        fun onCharacterItemClicked(
+        fun onCharacterItemClickedNonTablet(
             item: CharacterItem,
             context: Context
         ) {
             (context as MainActivity).apply {
                 runOnUiThread {
-                    handleCharacterItemClick(item, context)
+                    ViewUtils.openCharacterDetailScreen(item, context)
                 }
             }
         }

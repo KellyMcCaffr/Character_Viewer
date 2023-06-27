@@ -31,12 +31,12 @@ class DetailActivity : AppCompatActivity() {
             visibility = View.VISIBLE
         }
         descriptionView.apply {
-            text = detailItem.description
+            text = "fdgsdg reser REGsfd fdsgrenjr ersgjnfsf  sfeanioeafsjw  qwefnewf j fweajefw j qwfe qefwonfec e wa ew  fjeqew jfkacfewef w fe efnfej fe  efq jfe kef sef fjic fw kfsc he fc ewkj  d re f jds"
             visibility = View.VISIBLE
         }
         possibleImageWrapper.visibility = View.VISIBLE
         imageView.visibility = View.VISIBLE
-        ViewUtils.displayCharacterImageFromUrlAndUpdateBounds(detailItem.imageWidth, detailItem.imageHeight,
+        ViewUtils.displayCharacterImageFromUrlAndAdjustBounds(detailItem.imageWidth, detailItem.imageHeight,
             detailItem.imageUrl, characterImageView, this)
     }
 }

@@ -47,7 +47,7 @@ object ViewUtils {
         }
     }
 
-    fun displayCharacterImageFromUrlAndUpdateBounds(
+    fun displayCharacterImageFromUrlAndAdjustBounds(
         imageWidth: Int,
         imageHeight: Int,
         imageUrl: String?,
