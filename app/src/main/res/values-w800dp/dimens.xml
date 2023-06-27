@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="name_text_size">26sp</dimen>
+    <dimen name="description_text_size">20sp</dimen>
+    <dimen name="character_item_view_min_height">110dp</dimen>
+    <dimen name="character_image_width_default_dp">300dp</dimen>
+    <dimen name="character_image_height_default_dp">300dp</dimen>
+    <dimen name="character_image_width_max_dp">400dp</dimen>
+    <dimen name="character_image_height_max_dp">400dp</dimen>
+</resources>

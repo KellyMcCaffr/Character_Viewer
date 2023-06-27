@@ -71,7 +71,7 @@ class CharacterAdapter internal constructor(
         }
     }
 
-    fun filterCharacterList(
+    fun setFilteredCharacterList(
         newList: List<CharacterItem>
     ) {
         characterInfoListFiltered = newList

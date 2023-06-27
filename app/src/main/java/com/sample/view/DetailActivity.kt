@@ -2,7 +2,6 @@ package com.sample.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
@@ -11,7 +10,8 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import com.sample.R
 import com.sample.mvm.CharacterItem
-import java.util.*
+import java.util.Arrays
+import java.util.Calendar
 
 class DetailActivity : AppCompatActivity() {
 

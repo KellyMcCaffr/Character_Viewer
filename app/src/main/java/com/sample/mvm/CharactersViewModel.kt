@@ -1,7 +1,6 @@
 package com.sample.mvm
 
 import android.content.Context
-import android.util.Log
 import com.google.gson.*
 import com.sample.R
 import com.sample.view.ViewUtils
@@ -26,7 +25,7 @@ class CharactersViewModel {
                         processCharacterData(it, callback, context)
                     },
                     {
-                        Log.e("434435", "Load characters failed with error: " + it)
+                        callback.onCharacterListLoadError(context)
                     }
                 )
         )
@@ -46,11 +45,9 @@ class CharactersViewModel {
                 result.add(convertResponseItem(getCharacterItemAtPosition(jsonArray, c, gson), context))
                 c++
             }
-        } catch (e: JsonParseException) {
-            Log.e("435534", "Json parse exception occurred: " + e)
-        }  catch (e: StringIndexOutOfBoundsException) {
-            Log.e("435534", "String out of bounds exception occurred: " + e)
         }
+        catch (e: JsonParseException) { }
+        catch (e: StringIndexOutOfBoundsException) { }
         callback.onCharacterListLoaded(result, context)
     }
 

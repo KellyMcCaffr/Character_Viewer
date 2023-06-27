@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.ProgressBar
@@ -49,18 +48,13 @@ class MainActivity : AppCompatActivity() {
         val context = this
         searchEditText.addTextChangedListener(object: TextWatcher {
             @Override
-            override fun afterTextChanged(s: Editable) {
-                // TODO Auto-generated method stub
-            }
+            override fun afterTextChanged(s: Editable) {}
 
             @Override
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                // TODO Auto-generated method stub
-            }
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
             @Override
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                Log.e("435433","Text has changed to: " + s.toString())
                 if (context::adapter.isInitialized) {
                     refreshCharacterDataByFilter(s.toString())
                 }
@@ -89,11 +83,17 @@ class MainActivity : AppCompatActivity() {
         cachedCharacterList = characterList
     }
 
+    fun onCharacterListLoadError() {
+        if (progressBar != null) {
+            progressBar.visibility = View.GONE
+        }
+    }
+
     fun refreshCharacterDataByFilter(
         filterText: String
     ) {
         val newList = ViewUtils.filterCharacterListByText(filterText, adapter.characterInfoListRaw)
-        adapter.filterCharacterList(newList)
+        adapter.setFilteredCharacterList(newList)
     }
 
     fun onCharacterItemClicked(
@@ -102,7 +102,6 @@ class MainActivity : AppCompatActivity() {
         if (!openedDetailScreenSinceLastResume) {
             runOnUiThread {
                 openedDetailScreenSinceLastResume = true
-                Log.e("5656346","Opening character details 23")
                 ViewUtils.openCharacterDetailScreen(characterItem, this)
             }
         }
@@ -131,6 +130,15 @@ class MainActivity : AppCompatActivity() {
             val activity = (context as MainActivity)
             activity.runOnUiThread {
                 activity.displayCharacterData(characterList)
+            }
+        }
+
+        fun onCharacterListLoadError(
+            context: Context
+        ) {
+            val activity = (context as MainActivity)
+            activity.runOnUiThread {
+                activity.onCharacterListLoadError()
             }
         }
 

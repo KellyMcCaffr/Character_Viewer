@@ -6,8 +6,6 @@
     <string name="response_key_icon_width">Width</string>
     <string name="response_key_icon_height">Height</string>
     <string name="response_key_icon_url">URL</string>
-    <string name="character_image_width_default_value">500</string>
-    <string name="character_image_height_default_value">500</string>
     <string name="character_item_extra_key">character_item</string>
 
 </resources>

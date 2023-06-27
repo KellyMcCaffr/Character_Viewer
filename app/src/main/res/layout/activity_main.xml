@@ -13,6 +13,7 @@
         android:layout_centerHorizontal="true"
         android:hint="@string/search_edit_text_hint"
         android:textColor="@color/description_text_color"
+        android:textSize="@dimen/name_text_size"
         android:background="@color/white"
         android:visibility="gone"
         android:padding="10dp"

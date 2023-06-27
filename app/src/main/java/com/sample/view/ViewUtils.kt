@@ -3,7 +3,6 @@ package com.sample.view
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.util.Log
 import android.util.Pair
 import android.view.View
 import android.widget.ImageView
@@ -11,6 +10,8 @@ import com.sample.Constants
 import com.sample.R
 import com.sample.mvm.CharacterItem
 import com.squareup.picasso.Picasso
+import java.util.HashMap
+import java.util.ArrayList
 
 object ViewUtils {
 
@@ -77,12 +78,12 @@ object ViewUtils {
         params.width = if (imageWidth <= Constants.MAX_CHARACTER_IMAGE_WIDTH) {
             imageWidth
         } else {
-            Integer.parseInt(context.getString(R.string.character_image_width_default_value))
+            context.resources.getDimension(R.dimen.character_image_width_default_dp).toInt()
         }
         params.height = if (imageWidth <= Constants.MAX_CHARACTER_IMAGE_HEIGHT) {
             imageHeight
         } else {
-            Integer.parseInt(context.getString(R.string.character_image_height_default_value))
+            context.resources.getDimension(R.dimen.character_image_height_default_dp).toInt()
         }
         imageView.layoutParams = params
         imageView.visibility = View.VISIBLE
@@ -92,22 +93,23 @@ object ViewUtils {
         iconObject: HashMap<String, String>?,
         context: Context
     ): Pair<Int, Int> {
-        val defaultWidthString = context.getString(R.string.character_image_width_default_value)
-        val defaultHeightString = context.getString(R.string.character_image_height_default_value)
+        val defaultWidth =  context.resources.getDimension(R.dimen.character_image_width_default_dp).toInt()
+        val defaultHeight =  context.resources.getDimension(R.dimen.character_image_height_default_dp).toInt()
         val widthKey = context.getString(R.string.response_key_icon_width)
         val heightKey = context.getString(R.string.response_key_icon_height)
         val imageWidth = if (iconObject == null || !iconObject.containsKey(widthKey) ||
             iconObject[widthKey] == null || iconObject[widthKey]?.length == 0
         ) {
-            Integer.parseInt(defaultWidthString)
+            defaultWidth
         } else {
-            Integer.parseInt(iconObject[widthKey] ?: defaultWidthString)
+            Integer.parseInt(iconObject[widthKey] ?: defaultWidth.toString())
         }
         val imageHeight = if (iconObject == null || !iconObject.containsKey(heightKey) ||
-            iconObject[heightKey] == null || iconObject[heightKey]?.length == 0) {
-            Integer.parseInt(defaultHeightString)
+            iconObject[heightKey] == null || iconObject[heightKey]?.length == 0
+        ) {
+            defaultHeight
         } else {
-            Integer.parseInt(iconObject[heightKey] ?: defaultHeightString)
+            Integer.parseInt(iconObject[heightKey] ?: defaultHeight.toString())
         }
         return Pair(imageWidth, imageHeight)
     }
@@ -125,8 +127,6 @@ object ViewUtils {
                 filteredList.add(characterItem)
             }
         }
-        Log.e("455435","Returned filtered list of size: " + filteredList.size)
-        Log.e("455435","Here is filtered list: " + filteredList)
         return filteredList
     }
 }
