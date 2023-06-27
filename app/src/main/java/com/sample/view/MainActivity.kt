@@ -2,6 +2,9 @@ package com.sample.view
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.ProgressBar
@@ -17,7 +20,7 @@ class MainActivity : AppCompatActivity() {
 
     val callback: Callback = Callback()
     // Added to prevent multiple clicks launching multiple instances at the same time
-    var openedDetailScreenSinceLastResume = false
+    private var openedDetailScreenSinceLastResume = false
     lateinit var compositeDisposable: CompositeDisposable
     lateinit var viewModel: CharactersViewModel
     lateinit var progressBar: ProgressBar
@@ -33,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         initViews()
         val list = cachedCharacterList
         if (list == null || list.isEmpty()) {
-            loadCharacterData()
+            createLoadCharactersRequest()
         } else {
             displayCharacterData(list)
         }
@@ -41,11 +44,31 @@ class MainActivity : AppCompatActivity() {
 
     private fun initViews() {
         progressBar = findViewById(R.id.progressBar)
-        searchEditText = findViewById(R.id.searchEditText)
         recyclerView = findViewById(R.id.characterRecyclerView)
+        searchEditText = findViewById(R.id.searchEditText)
+        val context = this
+        searchEditText.addTextChangedListener(object: TextWatcher {
+            @Override
+            override fun afterTextChanged(s: Editable) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                Log.e("435433","Text has changed to: " + s.toString())
+                if (context::adapter.isInitialized) {
+                    refreshCharacterDataByFilter(s.toString())
+                }
+            }
+        })
     }
 
-    private fun loadCharacterData() {
+    private fun createLoadCharactersRequest() {
         progressBar.visibility = View.VISIBLE
         viewModel.loadCharacterData(callback, compositeDisposable, this)
     }
@@ -66,12 +89,20 @@ class MainActivity : AppCompatActivity() {
         cachedCharacterList = characterList
     }
 
+    fun refreshCharacterDataByFilter(
+        filterText: String
+    ) {
+        val newList = ViewUtils.filterCharacterListByText(filterText, adapter.characterInfoListRaw)
+        adapter.filterCharacterList(newList)
+    }
+
     fun onCharacterItemClicked(
         characterItem: CharacterItem
     ) {
         if (!openedDetailScreenSinceLastResume) {
             runOnUiThread {
                 openedDetailScreenSinceLastResume = true
+                Log.e("5656346","Opening character details 23")
                 ViewUtils.openCharacterDetailScreen(characterItem, this)
             }
         }

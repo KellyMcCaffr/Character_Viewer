@@ -3,6 +3,7 @@ package com.sample.view
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.util.Log
 import android.util.Pair
 import android.view.View
 import android.widget.ImageView
@@ -10,7 +11,6 @@ import com.sample.Constants
 import com.sample.R
 import com.sample.mvm.CharacterItem
 import com.squareup.picasso.Picasso
-import java.util.HashMap
 
 object ViewUtils {
 
@@ -110,5 +110,23 @@ object ViewUtils {
             Integer.parseInt(iconObject[heightKey] ?: defaultHeightString)
         }
         return Pair(imageWidth, imageHeight)
+    }
+
+    // Returns a list with character items whose names or descriptions contain the text
+    fun filterCharacterListByText(
+        searchText: String,
+        unfilteredList: List<CharacterItem>
+    ): List<CharacterItem> {
+        val filteredList: ArrayList<CharacterItem> = arrayListOf()
+        for (characterItem in unfilteredList) {
+            if (characterItem.name.contains(searchText) ||
+                characterItem.description.contains(searchText)
+            ) {
+                filteredList.add(characterItem)
+            }
+        }
+        Log.e("455435","Returned filtered list of size: " + filteredList.size)
+        Log.e("455435","Here is filtered list: " + filteredList)
+        return filteredList
     }
 }

@@ -12,7 +12,6 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import java.util.*
 
 class CharacterAdapter internal constructor(
     data: List<CharacterItem>,
@@ -20,7 +19,8 @@ class CharacterAdapter internal constructor(
     private val isTablet: Boolean,
     private val context: Context?
 ) : RecyclerView.Adapter<CharacterAdapter.ViewHolder>() {
-    private val characterInfoList = data
+    var characterInfoListRaw = data
+    private var characterInfoListFiltered = data
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var selectedItemPosition = -1
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -29,9 +29,9 @@ class CharacterAdapter internal constructor(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val character = characterInfoList[position]
+        val character = characterInfoListFiltered[position]
         holder.apply {
-            handleTabletDetailViewsOnBind(position, character, this)
+            handleTabletDetailViewsOnBind(position, character, this, false)
             nameTextView.apply {
                 text = character.name
                 visibility = View.VISIBLE
@@ -46,7 +46,7 @@ class CharacterAdapter internal constructor(
                         hideTabletDetailViews(holder)
                     } else {
                         selectedItemPosition = position
-                        handleTabletDetailViewsOnBind(position, character, holder)
+                        handleTabletDetailViewsOnBind(position, character, holder, true)
                     }
                 }
             }
@@ -71,18 +71,26 @@ class CharacterAdapter internal constructor(
         }
     }
 
+    fun filterCharacterList(
+        newList: List<CharacterItem>
+    ) {
+        characterInfoListFiltered = newList
+        notifyDataSetChanged()
+    }
+
     private fun handleTabletDetailViewsOnBind(
         position: Int,
         character: CharacterItem,
-        holder: ViewHolder
+        holder: ViewHolder,
+        isClick: Boolean
     ) {
         if (position != selectedItemPosition) {
             hideTabletDetailViews(holder)
         } else if (context != null) {
-            if (!isTablet) {
-                callback.onCharacterItemClickedNonTablet(character, context)
-            } else {
+            if (isTablet) {
                 showTabletDetailViews(holder, character)
+            } else if(isClick) {
+                callback.onCharacterItemClickedNonTablet(character, context)
             }
         }
     }
@@ -119,7 +127,7 @@ class CharacterAdapter internal constructor(
     }
 
     override fun getItemCount(): Int {
-        return characterInfoList.size
+        return characterInfoListFiltered.size
     }
 
     inner class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
