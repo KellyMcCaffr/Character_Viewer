@@ -120,13 +120,8 @@ object ViewUtils {
         unfilteredList: List<CharacterItem>
     ): List<CharacterItem> {
         val filteredList: ArrayList<CharacterItem> = arrayListOf()
-        for (characterItem in unfilteredList) {
-            if (characterItem.name.contains(searchText) ||
-                characterItem.description.contains(searchText)
-            ) {
-                filteredList.add(characterItem)
-            }
-        }
+        filteredList.addAll(unfilteredList.filter {it.name.contains(searchText)
+            || it.description.contains(searchText)})
         return filteredList
     }
 }
