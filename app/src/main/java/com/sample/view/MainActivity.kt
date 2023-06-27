@@ -15,13 +15,15 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 
 class MainActivity : AppCompatActivity() {
 
+    val callback: Callback = Callback()
+    // Added to prevent multiple clicks launching multiple instances at the same time
+    var openedDetailScreenSinceLastResume = false
     lateinit var compositeDisposable: CompositeDisposable
     lateinit var viewModel: CharactersViewModel
     lateinit var progressBar: ProgressBar
     lateinit var searchEditText: EditText
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: CharacterAdapter
-    val callback: Callback = Callback()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +66,22 @@ class MainActivity : AppCompatActivity() {
         cachedCharacterList = characterList
     }
 
+    fun onCharacterItemClicked(
+        characterItem: CharacterItem
+    ) {
+        if (!openedDetailScreenSinceLastResume) {
+            runOnUiThread {
+                openedDetailScreenSinceLastResume = true
+                ViewUtils.openCharacterDetailScreen(characterItem, this)
+            }
+        }
+    }
+
+    override fun onResume() {
+        openedDetailScreenSinceLastResume = false
+        super.onResume()
+    }
+
     override fun onDestroy() {
         compositeDisposable.clear()
         super.onDestroy()
@@ -79,10 +97,9 @@ class MainActivity : AppCompatActivity() {
             characterList: List<CharacterItem>,
             context: Context
         ) {
-            (context as MainActivity).apply {
-                runOnUiThread {
-                    displayCharacterData(characterList)
-                }
+            val activity = (context as MainActivity)
+            activity.runOnUiThread {
+                activity.displayCharacterData(characterList)
             }
         }
 
@@ -90,9 +107,10 @@ class MainActivity : AppCompatActivity() {
             item: CharacterItem,
             context: Context
         ) {
-            (context as MainActivity).apply {
+            val activity = (context as MainActivity)
+            activity.apply {
                 runOnUiThread {
-                    ViewUtils.openCharacterDetailScreen(item, context)
+                    activity.onCharacterItemClicked(item)
                 }
             }
         }

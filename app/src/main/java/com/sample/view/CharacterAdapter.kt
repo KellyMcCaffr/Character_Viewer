@@ -15,15 +15,12 @@ import androidx.recyclerview.widget.RecyclerView
 
 class CharacterAdapter internal constructor(
     data: List<CharacterItem>,
-    callback: MainActivity.Callback,
-    isTablet: Boolean,
-    context: Context?
+    private val callback: MainActivity.Callback,
+    private val isTablet: Boolean,
+    private val context: Context?
 ) : RecyclerView.Adapter<CharacterAdapter.ViewHolder>() {
     private val characterInfoList = data
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private val context = context
-    private val callback = callback
-    private val isTablet = isTablet
     private var selectedItemPosition = -1
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = inflater.inflate(R.layout.full_character_item, parent, false)
@@ -38,14 +35,17 @@ class CharacterAdapter internal constructor(
                 text = character.name
                 visibility = View.VISIBLE
             }
+            val positionalCharacterImageView = characterImageView
             itemView.setOnClickListener {
                 if (context != null) {
-                    if (selectedItemPosition != position || !isTablet) {
-                        selectedItemPosition = position
-                        handleTabletDetailViewsOnBind(position, character, holder)
-                    } else {
+                    val isShowing = positionalCharacterImageView != null &&
+                        positionalCharacterImageView.visibility == View.VISIBLE
+                    if (isShowing && isTablet) {
                         selectedItemPosition = -1
                         hideTabletDetailViews(holder)
+                    } else {
+                        selectedItemPosition = position
+                        handleTabletDetailViewsOnBind(position, character, holder)
                     }
                 }
             }
