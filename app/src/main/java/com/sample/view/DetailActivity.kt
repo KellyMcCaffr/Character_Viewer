@@ -2,6 +2,7 @@ package com.sample.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -31,12 +32,24 @@ class DetailActivity : AppCompatActivity() {
             visibility = View.VISIBLE
         }
         descriptionView.apply {
-            text = "fdgsdg reser REGsfd fdsgrenjr ersgjnfsf  sfeanioeafsjw  qwefnewf j fweajefw j qwfe qefwonfec e wa ew  fjeqew jfkacfewef w fe efnfej fe  efq jfe kef sef fjic fw kfsc he fc ewkj  d re f jds"
+            text = detailItem.description
             visibility = View.VISIBLE
         }
         possibleImageWrapper.visibility = View.VISIBLE
         imageView.visibility = View.VISIBLE
         ViewUtils.displayCharacterImageFromUrlAndAdjustBounds(detailItem.imageWidth, detailItem.imageHeight,
             detailItem.imageUrl, characterImageView, this)
+        setClickBackPress()
+    }
+
+    private fun setClickBackPress() {
+        val rootView = findViewById<View>(R.id.mainLayout)
+        val descriptionScrollView = findViewById<View>(R.id.descriptionTextView)
+        descriptionScrollView.setOnClickListener {
+            super.onBackPressed()
+        }
+        rootView.setOnClickListener{
+            super.onBackPressed()
+        }
     }
 }

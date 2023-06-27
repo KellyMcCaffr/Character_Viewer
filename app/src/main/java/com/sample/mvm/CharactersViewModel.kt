@@ -8,7 +8,7 @@ import com.sample.view.ViewUtils
 import com.sample.view.MainActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import java.util.*
+import java.util.ArrayList
 
 class CharactersViewModel {
 
@@ -62,7 +62,6 @@ class CharactersViewModel {
         val characterDescription = text.subSequence(text.indexOf('-') + 2, text.length).toString()
         val imageWidthHeight = ViewUtils.getImageWidthHeightFromIconObject(item.Icon, context)
         val imageUrl = item.Icon?.get(context.getString(R.string.response_key_icon_url)) ?: ""
-        Log.e("535645","Here is the image url retrieved: " + imageUrl)
         return CharacterItem(getCharacterName(text), characterDescription, imageWidthHeight.first,
             imageWidthHeight.second, imageUrl)
     }

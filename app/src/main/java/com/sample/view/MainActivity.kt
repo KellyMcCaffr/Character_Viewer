@@ -57,7 +57,8 @@ class MainActivity : AppCompatActivity() {
         val recyclerViewLayoutManager = LinearLayoutManager(this@MainActivity,
             LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = recyclerViewLayoutManager
-        adapter = CharacterAdapter(characterList, callback, this)
+        adapter = CharacterAdapter(characterList, callback, ViewUtils.getDeviceIsTablet(this),
+        this)
         recyclerView.adapter = adapter
         // Save for restore on rotate
         cachedCharacterList = characterList

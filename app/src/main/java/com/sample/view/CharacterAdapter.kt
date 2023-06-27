@@ -16,12 +16,14 @@ import androidx.recyclerview.widget.RecyclerView
 class CharacterAdapter internal constructor(
     data: List<CharacterItem>,
     callback: MainActivity.Callback,
+    isTablet: Boolean,
     context: Context?
 ) : RecyclerView.Adapter<CharacterAdapter.ViewHolder>() {
     private val characterInfoList = data
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private val context = context
     private val callback = callback
+    private val isTablet = isTablet
     private var selectedItemPosition = -1
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = inflater.inflate(R.layout.full_character_item, parent, false)
@@ -38,12 +40,17 @@ class CharacterAdapter internal constructor(
             }
             itemView.setOnClickListener {
                 if (context != null) {
-                    selectedItemPosition = position
-                    handleTabletDetailViewsOnBind(position, character, holder)
+                    if (selectedItemPosition != position || !isTablet) {
+                        selectedItemPosition = position
+                        handleTabletDetailViewsOnBind(position, character, holder)
+                    } else {
+                        selectedItemPosition = -1
+                        hideTabletDetailViews(holder)
+                    }
                 }
             }
             outerCardView.setOnTouchListener(
-                View.OnTouchListener(){
+                View.OnTouchListener {
                     view, motionEvent ->
                     when (motionEvent.action) {
                         MotionEvent.ACTION_DOWN -> {
@@ -68,19 +75,24 @@ class CharacterAdapter internal constructor(
         character: CharacterItem,
         holder: ViewHolder
     ) {
-        holder.apply {
-            if (position != selectedItemPosition) {
-                descriptionTextView.visibility = View.GONE
-                characterImageView.visibility = View.GONE
-                possibleCharacterImageWrapper.visibility = View.GONE
-            } else if (context != null) {
-                val isTablet = ViewUtils.getDeviceIsTablet(context)
-                if (!isTablet) {
-                    callback.onCharacterItemClickedNonTablet(character, context)
-                } else {
-                    showTabletDetailViews(holder, character)
-                }
+        if (position != selectedItemPosition) {
+            hideTabletDetailViews(holder)
+        } else if (context != null) {
+            if (!isTablet) {
+                callback.onCharacterItemClickedNonTablet(character, context)
+            } else {
+                showTabletDetailViews(holder, character)
             }
+        }
+    }
+
+    private fun hideTabletDetailViews(
+        holder: ViewHolder
+    ) {
+        holder.apply {
+            descriptionTextView.visibility = View.GONE
+            characterImageView.visibility = View.GONE
+            possibleCharacterImageWrapper.visibility = View.GONE
         }
     }
 
