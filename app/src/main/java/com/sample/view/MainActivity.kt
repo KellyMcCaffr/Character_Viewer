@@ -2,7 +2,6 @@ package com.sample.view
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.ProgressBar
@@ -30,7 +29,6 @@ class MainActivity : AppCompatActivity() {
         compositeDisposable = CompositeDisposable()
         viewModel = CharactersViewModel()
         initViews()
-        Log.e("453345","Is device tablet?: " + Utils.getDeviceIsTablet(this))
         val list = cachedCharacterList
         if (list == null || list.isEmpty()) {
             loadCharacterData()

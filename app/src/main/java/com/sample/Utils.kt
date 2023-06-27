@@ -3,9 +3,16 @@ package com.sample
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Log
 import android.util.Pair
 import com.sample.mvm.CharacterItem
 import com.sample.view.DetailActivity
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.MalformedURLException
+import java.net.URL
 import java.util.HashMap
 
 object Utils {
@@ -43,6 +50,45 @@ object Utils {
         }
     }
 
+    fun getBitmapFromIconObject(
+        iconObject: HashMap<String, String>?,
+        firstUrl: String,
+        imageWidth: Int,
+        imageHeight:Int,
+        context: Context
+    ): Bitmap {
+        val imageUrl = iconObject?.get(context.getString(R.string.response_key_icon_url)) ?: ""
+        var bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.default_character_image)
+        var finalWidth = imageWidth
+        var finalHeight = imageHeight
+        if (imageUrl.isNotEmpty()) {
+            try {
+                val connection: HttpURLConnection =
+                    URL(firstUrl + imageUrl).openConnection() as HttpURLConnection
+                connection.connect()
+                val input: InputStream = connection.inputStream
+                val unscaledBitmap = BitmapFactory.decodeStream(input)
+                if (imageWidth > Constants.MAX_CHARACTER_IMAGE_WIDTH) {
+                    finalWidth = Constants.MAX_CHARACTER_IMAGE_WIDTH
+                }
+                if (imageHeight > Constants.MAX_CHARACTER_IMAGE_HEIGHT) {
+                    finalHeight = Constants.MAX_CHARACTER_IMAGE_HEIGHT
+                }
+                if (unscaledBitmap != null) {
+                    bitmap = Bitmap.createScaledBitmap(
+                        unscaledBitmap,
+                        finalWidth,
+                        finalHeight,
+                        true
+                    )
+                }
+            } catch (e: MalformedURLException) {
+                Log.e("54453","Malformed url exception occurred for: " + imageUrl)
+            }
+        }
+        return bitmap
+    }
+
     fun getImageWidthHeight(
         iconObject: HashMap<String, String>?,
         context: Context
@@ -66,5 +112,4 @@ object Utils {
         }
         return Pair(imageWidth, imageHeight)
     }
-
 }

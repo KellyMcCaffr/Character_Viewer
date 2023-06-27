@@ -3,13 +3,17 @@ package com.sample.view
 import com.sample.R
 import com.sample.mvm.CharacterItem
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
+import java.util.*
 
 class CharacterAdapter internal constructor(
     data: List<CharacterItem>,
@@ -27,11 +31,15 @@ class CharacterAdapter internal constructor(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val character = characterInfoList[position]
+        Log.e("34545","Here is character image url: " + character.imageUrl)
         holder.apply {
+            showCharacterImage(character.imageWidth, character.imageHeight,
+                character.imageUrl, holder.characterImageView)
             nameTextView.apply {
                 text = character.name
                 visibility = View.VISIBLE
             }
+            //val iconBitmap = Utils.getBitmapFromIconObject(character.imageUrl)
             itemView.setOnClickListener {
                 if (context != null) {
                     callback.onCharacterItemClicked(character, context)
@@ -58,17 +66,35 @@ class CharacterAdapter internal constructor(
         }
     }
 
+    private fun showCharacterImage(
+        imageWidth: Int,
+        imageHeight: Int,
+        imageUrl: String?,
+        imageView: ImageView
+    ) {
+        if (context != null) {
+            if (imageUrl!= null && imageUrl.isNotEmpty()) {
+                val fullURL = "https://duckduckgo.com" + imageUrl
+                Picasso.get().load(fullURL).into(imageView)
+            } else {
+                Log.e("454546","Empty last url value: " + imageUrl)
+                Picasso.get()
+                    .load(R.drawable.default_character_image)
+                    .into(imageView)
+            }
+            imageView.visibility = View.VISIBLE
+        }
+    }
+
     override fun getItemCount(): Int {
         return characterInfoList.size
     }
 
-    private fun openDetailScreen() {
-        //val intent = Inten()
-    }
-
     inner class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-        var nameTextView: TextView = itemView.findViewById(R.id.nameTextView)
-        var outerCardView: CardView = itemView.findViewById(R.id.outerCardView)
+        val nameTextView: TextView = itemView.findViewById(R.id.nameTextView)
+        val characterImageView: ImageView = itemView.findViewById(R.id.imageView)
+        val descriptionTextView: TextView = itemView.findViewById(R.id.descriptionTextView)
+        val outerCardView: CardView = itemView.findViewById(R.id.outerCardView)
         override fun onClick(view: View) {}
     }
 }

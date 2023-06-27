@@ -8,7 +8,7 @@ import com.sample.Utils
 import com.sample.view.MainActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import java.util.ArrayList
+import java.util.*
 
 class CharactersViewModel {
 
@@ -62,8 +62,9 @@ class CharactersViewModel {
         val characterDescription = text.subSequence(text.indexOf('-') + 2, text.length).toString()
         val imageWidthHeight = Utils.getImageWidthHeight(item.Icon, context)
         val imageUrl = item.Icon?.get(context.getString(R.string.response_key_icon_url)) ?: ""
+        Log.e("535645","Here is the image url retrieved: " + imageUrl)
         return CharacterItem(getCharacterName(text), characterDescription, imageWidthHeight.first,
-            imageWidthHeight.second, imageUrl)
+            imageWidthHeight.second, item.FirstURL, imageUrl)
     }
 
     private fun getCharacterName(
@@ -86,39 +87,4 @@ class CharactersViewModel {
         val jsonElement = JsonParser().parse(array.get(position).toString())
         return gson.fromJson(jsonElement, ResponseItem::class.java)
     }
-
-    /*private fun getBitmapFromIconObject(
-        iconObject: HashMap<String, String>?,
-        firstUrl: String,
-        context: Context
-    ): Bitmap {
-        val imageUrl = iconObject?.get(context.getString(R.string.response_key_icon_url)) ?: ""
-        var bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.default_character_image)
-        if (imageUrl.isNotEmpty()) {
-            try {
-                val connection: HttpURLConnection =
-                    URL(firstUrl + imageUrl).openConnection() as HttpURLConnection
-                connection.connect()
-                val input: InputStream = connection.inputStream
-                val unscaledBitmap = BitmapFactory.decodeStream(input)
-                if (imageWidth > MAX_CHARACTER_IMAGE_WIDTH) {
-                    imageWidth = MAX_CHARACTER_IMAGE_WIDTH
-                }
-                if (imageHeight > MAX_CHARACTER_IMAGE_HEIGHT) {
-                    imageHeight = MAX_CHARACTER_IMAGE_HEIGHT
-                }
-                if (unscaledBitmap != null) {
-                    bitmap = Bitmap.createScaledBitmap(
-                        unscaledBitmap,
-                        imageWidth,
-                        imageHeight,
-                        true
-                    )
-                }
-            } catch (e: MalformedURLException) {
-                Log.e("54453","Malformed url exception occurred for: " + imageUrl)
-            }
-        }
-        return bitmap
-    }*/
 }

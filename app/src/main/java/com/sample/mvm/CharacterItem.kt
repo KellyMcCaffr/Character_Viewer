@@ -7,6 +7,7 @@ data class CharacterItem (
     val description: String,
     val imageWidth: Int,
     val imageHeight: Int,
+    val FirstURL: String?,
     // For blank value, use default image
     val imageUrl: String?
 ) : Serializable

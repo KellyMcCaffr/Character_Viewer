@@ -24,7 +24,6 @@
             android:layout_marginTop="10dp"
             android:gravity="center|top"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/default_character_image"
             android:visibility="gone"/>
         <TextView
             android:id="@+id/nameTextView"
