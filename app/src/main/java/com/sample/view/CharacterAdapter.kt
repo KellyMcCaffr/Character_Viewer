@@ -3,7 +3,6 @@ package com.sample.view
 import com.sample.R
 import com.sample.mvm.CharacterItem
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -23,6 +22,7 @@ class CharacterAdapter internal constructor(
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private val context = context
     private val callback = callback
+    private var selectedItemPosition = -1
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = inflater.inflate(R.layout.full_character_item, parent, false)
         return ViewHolder(view)
@@ -30,29 +30,22 @@ class CharacterAdapter internal constructor(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val character = characterInfoList[position]
-        Log.e("34545","Here is character image url: " + character.imageUrl)
         holder.apply {
-            /*ViewUtils.showCharacterImage(character.imageWidth, character.imageHeight,
-                character.imageUrl, holder.characterImageView)*/
-            //possibleCharacterImageWrapper.setVisibility(View.VISIBLE)
+            handleTabletDetailViewsOnBind(position, character, this)
             nameTextView.apply {
                 text = character.name
                 visibility = View.VISIBLE
             }
             itemView.setOnClickListener {
                 if (context != null) {
-                    val isTablet = ViewUtils.getDeviceIsTablet(context)
-                    if (!isTablet) {
-                        callback.onCharacterItemClickedNonTablet(character, context)
-                    } else {
-                        showTabletDetailViews(holder, character)
-                    }
+                    selectedItemPosition = position
+                    handleTabletDetailViewsOnBind(position, character, holder)
                 }
             }
             outerCardView.setOnTouchListener(
                 View.OnTouchListener(){
                     view, motionEvent ->
-                    when (motionEvent.action){
+                    when (motionEvent.action) {
                         MotionEvent.ACTION_DOWN -> {
                             view.alpha = 0.6f
                         }
@@ -70,21 +63,46 @@ class CharacterAdapter internal constructor(
         }
     }
 
+    private fun handleTabletDetailViewsOnBind(
+        position: Int,
+        character: CharacterItem,
+        holder: ViewHolder
+    ) {
+        holder.apply {
+            if (position != selectedItemPosition) {
+                descriptionTextView.visibility = View.GONE
+                characterImageView.visibility = View.GONE
+                possibleCharacterImageWrapper.visibility = View.GONE
+            } else if (context != null) {
+                val isTablet = ViewUtils.getDeviceIsTablet(context)
+                if (!isTablet) {
+                    callback.onCharacterItemClickedNonTablet(character, context)
+                } else {
+                    showTabletDetailViews(holder, character)
+                }
+            }
+        }
+    }
+
     private fun showTabletDetailViews(
         holder: ViewHolder,
         characterItem: CharacterItem
     ) {
-        holder.descriptionTextView.visibility = View.VISIBLE
-        holder.characterImageView.visibility = View.VISIBLE
-        holder.possibleCharacterImageWrapper.visibility = View.VISIBLE
-        holder.descriptionTextView.text = characterItem.description
-        ViewUtils.displayCharacterImageFromUrlAndAdjustBounds(
-            characterItem.imageWidth,
-            characterItem.imageHeight,
-            characterItem.imageUrl,
-            holder.characterImageView,
-            context
-        )
+        holder.apply {
+            descriptionTextView.apply {
+                visibility = View.VISIBLE
+                text = characterItem.description
+            }
+            characterImageView.visibility = View.VISIBLE
+            possibleCharacterImageWrapper.visibility = View.VISIBLE
+            ViewUtils.displayCharacterImageFromUrlAndAdjustBounds(
+                characterItem.imageWidth,
+                characterItem.imageHeight,
+                characterItem.imageUrl,
+                characterImageView,
+                context
+            )
+        }
     }
 
     override fun getItemCount(): Int {
