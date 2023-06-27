@@ -2,8 +2,7 @@ package com.sample
 
 object Constants {
 
-    val MAX_CHARACTER_IMAGE_WIDTH = 600
-    val MAX_CHARACTER_IMAGE_HEIGHT = 600
-
-    val TABLET_CHECK_DIAGONAL = 7
+    const val MAX_CHARACTER_IMAGE_WIDTH = 600
+    const val MAX_CHARACTER_IMAGE_HEIGHT = 600
+    const val TABLET_CHECK_DIAGONAL_NUM_INCHES = 7
 }

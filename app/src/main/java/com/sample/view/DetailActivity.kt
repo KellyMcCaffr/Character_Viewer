@@ -3,12 +3,15 @@ package com.sample.view
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import com.sample.R
 import com.sample.mvm.CharacterItem
+import java.util.*
 
 class DetailActivity : AppCompatActivity() {
 
@@ -43,13 +46,38 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun setClickBackPress() {
-        val rootView = findViewById<View>(R.id.mainLayout)
-        val descriptionScrollView = findViewById<View>(R.id.descriptionTextView)
-        descriptionScrollView.setOnClickListener {
-            super.onBackPressed()
-        }
-        rootView.setOnClickListener{
-            super.onBackPressed()
+        val descriptionTextView = findViewById<View>(R.id.descriptionTextView)
+        val cardView = findViewById<CardView>(R.id.outerCardView)
+        val viewList = Arrays.asList(cardView, descriptionTextView)
+        for (view in viewList) {
+            view.setOnClickListener {
+                super.onBackPressed()
+            }
+            var timePressStart = -1L
+            view.setOnTouchListener(
+                View.OnTouchListener { view, motionEvent ->
+                    when (motionEvent.action) {
+                        MotionEvent.ACTION_DOWN -> {
+                            if (timePressStart == -1L) {
+                                timePressStart = Calendar.getInstance().timeInMillis
+                            }
+                            cardView.alpha = 0.6f
+                        }
+                        MotionEvent.ACTION_UP -> {
+                            cardView.alpha = 1f
+                            if ((Calendar.getInstance().timeInMillis - timePressStart) < 500) {
+                                view.performClick()
+                            }
+                            timePressStart = -1L
+                        }
+                        MotionEvent.ACTION_CANCEL -> {
+                            cardView.alpha = 1f
+                            timePressStart = -1L
+                        }
+                    }
+                    return@OnTouchListener true
+                }
+            )
         }
     }
 }

@@ -41,7 +41,7 @@ object ViewUtils {
             val yinch = displayMetrics.heightPixels / displayMetrics.ydpi
             val xinch = displayMetrics.widthPixels / displayMetrics.xdpi
             val diagonalinch = Math.sqrt((xinch * xinch + yinch * yinch).toDouble())
-            diagonalinch >= Constants.TABLET_CHECK_DIAGONAL
+            diagonalinch >= Constants.TABLET_CHECK_DIAGONAL_NUM_INCHES
         } catch (e: Exception) {
             false
         }
