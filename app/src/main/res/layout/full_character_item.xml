@@ -9,14 +9,43 @@
     app:cardBackgroundColor="@color/white"
     app:cardUseCompatPadding="true"
     app:cardCornerRadius="5dp"
-    app:cardElevation="5dp">
-    <TextView
-        android:id="@+id/nameTextView"
+    app:cardElevation="5dp"
+    android:orientation="vertical"
+    android:layout_centerVertical="true">
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:textColor="@color/black"
-        android:textSize="22sp"
-        android:gravity="center"
-        android:layout_centerHorizontal="true"/>
+        android:layout_height="match_parent"
+        android:padding="5dp">
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center|top"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/default_character_image"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/nameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:textColor="@color/black"
+            android:textSize="22sp"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/imageView"
+            android:visibility="gone" />
+        <TextView
+            android:id="@+id/descriptionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/nameTextView"
+            android:visibility="gone"/>
+    </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

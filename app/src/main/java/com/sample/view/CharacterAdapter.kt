@@ -28,7 +28,10 @@ class CharacterAdapter internal constructor(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val character = characterInfoList[position]
         holder.apply {
-            nameTextView.text = character.name
+            nameTextView.apply {
+                text = character.name
+                visibility = View.VISIBLE
+            }
             itemView.setOnClickListener {
                 if (context != null) {
                     callback.onCharacterItemClicked(character, context)
