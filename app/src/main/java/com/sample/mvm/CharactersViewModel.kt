@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.google.gson.*
 import com.sample.R
-import com.sample.Utils
+import com.sample.view.ViewUtils
 import com.sample.view.MainActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -60,11 +60,11 @@ class CharactersViewModel {
     ): CharacterItem {
         val text = item.Text ?: ""
         val characterDescription = text.subSequence(text.indexOf('-') + 2, text.length).toString()
-        val imageWidthHeight = Utils.getImageWidthHeight(item.Icon, context)
+        val imageWidthHeight = ViewUtils.getImageWidthHeightFromIconObject(item.Icon, context)
         val imageUrl = item.Icon?.get(context.getString(R.string.response_key_icon_url)) ?: ""
         Log.e("535645","Here is the image url retrieved: " + imageUrl)
         return CharacterItem(getCharacterName(text), characterDescription, imageWidthHeight.first,
-            imageWidthHeight.second, item.FirstURL, imageUrl)
+            imageWidthHeight.second, imageUrl)
     }
 
     private fun getCharacterName(

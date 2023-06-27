@@ -1,21 +1,18 @@
-package com.sample
+package com.sample.view
 
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.util.Log
 import android.util.Pair
+import android.view.View
+import android.widget.ImageView
+import com.sample.Constants
+import com.sample.R
 import com.sample.mvm.CharacterItem
-import com.sample.view.DetailActivity
-import java.io.InputStream
-import java.net.HttpURLConnection
-import java.net.MalformedURLException
-import java.net.URL
+import com.squareup.picasso.Picasso
 import java.util.HashMap
 
-object Utils {
+object ViewUtils {
 
     fun openCharacterDetailScreen(
         item: CharacterItem,
@@ -50,46 +47,48 @@ object Utils {
         }
     }
 
-    fun getBitmapFromIconObject(
-        iconObject: HashMap<String, String>?,
-        firstUrl: String,
+    fun displayCharacterImageFromUrlAndUpdateBounds(
         imageWidth: Int,
-        imageHeight:Int,
-        context: Context
-    ): Bitmap {
-        val imageUrl = iconObject?.get(context.getString(R.string.response_key_icon_url)) ?: ""
-        var bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.default_character_image)
-        var finalWidth = imageWidth
-        var finalHeight = imageHeight
-        if (imageUrl.isNotEmpty()) {
-            try {
-                val connection: HttpURLConnection =
-                    URL(firstUrl + imageUrl).openConnection() as HttpURLConnection
-                connection.connect()
-                val input: InputStream = connection.inputStream
-                val unscaledBitmap = BitmapFactory.decodeStream(input)
-                if (imageWidth > Constants.MAX_CHARACTER_IMAGE_WIDTH) {
-                    finalWidth = Constants.MAX_CHARACTER_IMAGE_WIDTH
-                }
-                if (imageHeight > Constants.MAX_CHARACTER_IMAGE_HEIGHT) {
-                    finalHeight = Constants.MAX_CHARACTER_IMAGE_HEIGHT
-                }
-                if (unscaledBitmap != null) {
-                    bitmap = Bitmap.createScaledBitmap(
-                        unscaledBitmap,
-                        finalWidth,
-                        finalHeight,
-                        true
-                    )
-                }
-            } catch (e: MalformedURLException) {
-                Log.e("54453","Malformed url exception occurred for: " + imageUrl)
+        imageHeight: Int,
+        imageUrl: String?,
+        imageView: ImageView,
+        context: Context?
+    ) {
+        if (context != null) {
+            setImageWidthHeight(imageWidth, imageHeight, imageView, context)
+            if (imageUrl!= null && imageUrl.isNotEmpty()) {
+                val fullURL = context.getString(R.string.url_search_prefix) + imageUrl
+                Picasso.get().load(fullURL).into(imageView)
+            } else {
+                Picasso.get()
+                    .load(R.drawable.default_character_image)
+                    .into(imageView)
             }
         }
-        return bitmap
     }
 
-    fun getImageWidthHeight(
+    private fun setImageWidthHeight(
+        imageWidth: Int,
+        imageHeight: Int,
+        imageView: View,
+        context: Context
+    ) {
+        val params = imageView.layoutParams
+        params.width = if (imageWidth <= Constants.MAX_CHARACTER_IMAGE_WIDTH) {
+            imageWidth
+        } else {
+            Integer.parseInt(context.getString(R.string.character_image_width_default_value))
+        }
+        params.height = if (imageWidth <= Constants.MAX_CHARACTER_IMAGE_HEIGHT) {
+            imageHeight
+        } else {
+            Integer.parseInt(context.getString(R.string.character_image_height_default_value))
+        }
+        imageView.layoutParams = params
+        imageView.visibility = View.VISIBLE
+    }
+
+    fun getImageWidthHeightFromIconObject(
         iconObject: HashMap<String, String>?,
         context: Context
     ): Pair<Int, Int> {

@@ -4,11 +4,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import com.sample.R
 import com.sample.mvm.CharacterItem
 
 class DetailActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
@@ -19,9 +21,11 @@ class DetailActivity : AppCompatActivity() {
     private fun setViews(
         detailItem: CharacterItem
     ) {
-        val imageView: ImageView = findViewById(R.id.imageView)
+        val possibleImageWrapper = findViewById<RelativeLayout>(R.id.possibleCharacterImageWrapper)
+        val imageView: ImageView = findViewById(R.id.characterImageView)
         val titleView: TextView = findViewById(R.id.nameTextView)
         val descriptionView: TextView = findViewById(R.id.descriptionTextView)
+        val characterImageView = findViewById<ImageView>(R.id.characterImageView)
         titleView.apply {
             text = detailItem.name
             visibility = View.VISIBLE
@@ -30,5 +34,9 @@ class DetailActivity : AppCompatActivity() {
             text = detailItem.description
             visibility = View.VISIBLE
         }
+        possibleImageWrapper.visibility = View.VISIBLE
+        imageView.visibility = View.VISIBLE
+        ViewUtils.displayCharacterImageFromUrlAndUpdateBounds(detailItem.imageWidth, detailItem.imageHeight,
+            detailItem.imageUrl, characterImageView, this)
     }
 }

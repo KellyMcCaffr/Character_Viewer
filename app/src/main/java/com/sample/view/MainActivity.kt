@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sample.R
-import com.sample.Utils
 import com.sample.mvm.CharacterItem
 import com.sample.mvm.CharactersViewModel
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -66,9 +65,9 @@ class MainActivity : AppCompatActivity() {
         item: CharacterItem,
         context: Context
     ) {
-        val isTablet = Utils.getDeviceIsTablet(context)
+        val isTablet = ViewUtils.getDeviceIsTablet(context)
         if (!isTablet) {
-            Utils.openCharacterDetailScreen(item, context)
+            ViewUtils.openCharacterDetailScreen(item, context)
         }
     }
 
