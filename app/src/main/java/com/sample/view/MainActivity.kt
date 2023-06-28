@@ -19,11 +19,11 @@ import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
-    val callback: Callback = Callback()
-    val compositeDisposable = CompositeDisposable()
-
     @Inject
     lateinit var viewModel: CharactersViewModel
+
+    private val callback: Callback = Callback()
+    private val compositeDisposable = CompositeDisposable()
 
     lateinit var adapter: CharacterAdapter
     lateinit var progressBar: ProgressBar
@@ -69,7 +69,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun createLoadCharactersRequest() {
         progressBar.visibility = View.VISIBLE
-        viewModel.loadCharacterData(callback, compositeDisposable, this)
+        compositeDisposable.add(
+            viewModel.loadCharacterData(this)
+                .subscribe(
+                    {
+                        runOnUiThread {
+                            displayCharacterData(it)
+                        }
+                    },
+                    {
+                        runOnUiThread {
+                            onCharacterListLoadError()
+                        }
+                    }
+                )
+        )
     }
 
     fun displayCharacterData(
@@ -127,25 +141,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     class Callback {
-
-        fun onCharacterListLoaded(
-            characterList: List<CharacterItem>,
-            context: Context
-        ) {
-            val activity = (context as MainActivity)
-            activity.runOnUiThread {
-                activity.displayCharacterData(characterList)
-            }
-        }
-
-        fun onCharacterListLoadError(
-            context: Context
-        ) {
-            val activity = (context as MainActivity)
-            activity.runOnUiThread {
-                activity.onCharacterListLoadError()
-            }
-        }
 
         fun onCharacterItemClickedNonTablet(
             item: CharacterItem,

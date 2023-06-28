@@ -5,6 +5,7 @@ import com.google.gson.*
 import com.sample.R
 import com.sample.view.ViewUtils
 import com.sample.view.MainActivity
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.ArrayList
@@ -13,30 +14,17 @@ import javax.inject.Inject
 class CharactersViewModel @Inject constructor() {
 
     fun loadCharacterData(
-        callback: MainActivity.Callback,
-        compositeDisposable: CompositeDisposable,
         context: Context
-    ) {
-        val mInterface = RequestApiImpl()
-        compositeDisposable.add(
-            mInterface.getCharacterList()
-                .subscribeOn(Schedulers.io())
-                .subscribe(
-                    {
-                        processCharacterData(it, callback, context)
-                    },
-                    {
-                        callback.onCharacterListLoadError(context)
-                    }
-                )
-        )
+    ): Observable<List<CharacterItem>> {
+        return RequestApiImpl().getCharacterList()
+            .subscribeOn(Schedulers.io())
+            .flatMap { entry -> Observable.just(processCharacterData(entry, context)) }
     }
 
     private fun processCharacterData(
         dataObject: JsonObject,
-        callback: MainActivity.Callback,
         context: Context
-    ) {
+    ): List<CharacterItem> {
         val result: ArrayList<CharacterItem> = ArrayList()
         try {
             val jsonArray = dataObject.get(context.getString(R.string.response_key_related_topics)) as JsonArray
@@ -49,7 +37,7 @@ class CharactersViewModel @Inject constructor() {
         }
         catch (e: JsonParseException) { }
         catch (e: StringIndexOutOfBoundsException) { }
-        callback.onCharacterListLoaded(result, context)
+        return result
     }
 
     private fun convertResponseItem(
