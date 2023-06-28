@@ -8,8 +8,9 @@ import com.sample.view.MainActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.ArrayList
+import javax.inject.Inject
 
-class CharactersViewModel {
+class CharactersViewModel @Inject constructor() {
 
     fun loadCharacterData(
         callback: MainActivity.Callback,

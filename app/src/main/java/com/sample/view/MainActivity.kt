@@ -10,28 +10,33 @@ import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.sample.DaggerComponent
 import com.sample.R
 import com.sample.mvm.CharacterItem
 import com.sample.mvm.CharactersViewModel
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
     val callback: Callback = Callback()
-    // Added to prevent multiple clicks launching multiple instances at the same time
-    private var openedDetailScreenSinceLastResume = false
-    lateinit var compositeDisposable: CompositeDisposable
+    val compositeDisposable = CompositeDisposable()
+
+    @Inject
     lateinit var viewModel: CharactersViewModel
+
+    lateinit var adapter: CharacterAdapter
     lateinit var progressBar: ProgressBar
     lateinit var searchEditText: EditText
     lateinit var recyclerView: RecyclerView
-    lateinit var adapter: CharacterAdapter
+
+    // Added to prevent multiple clicks launching multiple instances at the same time
+    private var openedDetailScreenSinceLastResume = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        compositeDisposable = CompositeDisposable()
-        viewModel = CharactersViewModel()
+        DaggerComponent.builder().build().injectMainActivity(this)
         initViews()
         val list = cachedCharacterList
         if (list == null || list.isEmpty()) {
@@ -76,8 +81,8 @@ class MainActivity : AppCompatActivity() {
         val recyclerViewLayoutManager = LinearLayoutManager(this@MainActivity,
             LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = recyclerViewLayoutManager
-        adapter = CharacterAdapter(characterList, callback, ViewUtils.getDeviceIsTablet(this),
-        this)
+        adapter = CharacterAdapter(characterList, callback,
+            ViewUtils.getDeviceIsTablet(this), this)
         recyclerView.adapter = adapter
         // Save for restore on rotate
         cachedCharacterList = characterList
