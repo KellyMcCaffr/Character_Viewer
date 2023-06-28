@@ -48,7 +48,7 @@ class ViewUtils {
         iconObject.put("Height", "200")
         iconObject.put("URL", "")
         val result = getImageWidthHeightFromIconObject(iconObject, appContext)
-        Assert.assertEquals(result.first, defaultWidth)
+        Assert.assertEquals(result.first, (defaultWidth / appContext.resources.displayMetrics.density).toInt())
         Assert.assertEquals(result.second, 200)
     }
 
@@ -62,8 +62,8 @@ class ViewUtils {
         iconObject.put("Height", "")
         iconObject.put("URL", "")
         val result = getImageWidthHeightFromIconObject(iconObject, appContext)
-        Assert.assertEquals(result.first, defaultWidth)
-        Assert.assertEquals(result.second, defaultHeight)
+        Assert.assertEquals(result.first, (defaultWidth / appContext.resources.displayMetrics.density).toInt())
+        Assert.assertEquals(result.second, (defaultHeight / appContext.resources.displayMetrics.density).toInt())
     }
 
     @Test

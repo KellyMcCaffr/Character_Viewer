@@ -4,8 +4,8 @@
     <dimen name="name_text_size">22sp</dimen>
     <dimen name="description_text_size">14sp</dimen>
     <dimen name="character_item_view_min_height">70dp</dimen>
-    <dimen name="character_image_width_default_dp">100dp</dimen>
-    <dimen name="character_image_height_default_dp">100dp</dimen>
-    <dimen name="character_image_width_max_dp">200dp</dimen>
-    <dimen name="character_image_height_max_dp">200dp</dimen>
+    <dimen name="character_image_width_default_dp">150dp</dimen>
+    <dimen name="character_image_height_default_dp">150dp</dimen>
+    <dimen name="character_image_width_max_dp">250dp</dimen>
+    <dimen name="character_image_height_max_dp">250dp</dimen>
 </resources>

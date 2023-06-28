@@ -84,8 +84,8 @@ object ViewUtils {
         iconObject: HashMap<String, String>?,
         context: Context
     ): Pair<Int, Int> {
-        val defaultWidth = (context.resources.getDimension(R.dimen.character_image_width_default_dp) / context.resources.displayMetrics.density).toInt()
-        val defaultHeight =  (context.resources.getDimension(R.dimen.character_image_height_default_dp) / context.resources.displayMetrics.density).toInt()
+        val defaultWidth = (context.resources.getDimension(R.dimen.character_image_width_default_dp)).toInt()
+        val defaultHeight =  (context.resources.getDimension(R.dimen.character_image_height_default_dp)).toInt()
         val widthKey = context.getString(R.string.response_key_icon_width)
         val heightKey = context.getString(R.string.response_key_icon_height)
         var imageWidth = if (iconObject == null || !iconObject.containsKey(widthKey) ||
@@ -107,6 +107,13 @@ object ViewUtils {
         }
         if (imageHeight > Constants.MAX_CHARACTER_IMAGE_HEIGHT) {
             imageHeight = Constants.MAX_CHARACTER_IMAGE_HEIGHT
+        }
+        // Assumes that a default image will be used so width and height can never be 0
+        if (imageWidth == 0) {
+            imageWidth = defaultWidth
+        }
+        if (imageHeight == 0) {
+            imageHeight = defaultHeight
         }
         return Pair(imageWidth, imageHeight)
     }
