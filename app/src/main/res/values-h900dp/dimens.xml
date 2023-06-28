@@ -3,4 +3,8 @@
     <dimen name="name_text_size">28sp</dimen>
     <dimen name="description_text_size">22sp</dimen>
     <dimen name="character_item_view_min_height">120dp</dimen>
+    <dimen name="character_image_width_default_dp">600dp</dimen>
+    <dimen name="character_image_height_default_dp">600dp</dimen>
+    <dimen name="character_image_width_max_dp">700dp</dimen>
+    <dimen name="character_image_height_max_dp">700dp</dimen>
 </resources>

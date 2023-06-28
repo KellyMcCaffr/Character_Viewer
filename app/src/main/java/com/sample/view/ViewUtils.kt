@@ -56,7 +56,7 @@ object ViewUtils {
         context: Context?
     ) {
         if (context != null) {
-            setImageWidthHeight(imageWidth, imageHeight, imageView, context)
+            setImageWidthHeight(imageWidth, imageHeight, imageView)
             if (imageUrl!= null && imageUrl.isNotEmpty()) {
                 val fullURL = context.getString(R.string.url_search_prefix) + imageUrl
                 Picasso.get().load(fullURL).into(imageView)
@@ -71,20 +71,11 @@ object ViewUtils {
     private fun setImageWidthHeight(
         imageWidth: Int,
         imageHeight: Int,
-        imageView: View,
-        context: Context
+        imageView: View
     ) {
         val params = imageView.layoutParams
-        params.width = if (imageWidth <= Constants.MAX_CHARACTER_IMAGE_WIDTH) {
-            imageWidth
-        } else {
-            context.resources.getDimension(R.dimen.character_image_width_default_dp).toInt()
-        }
-        params.height = if (imageWidth <= Constants.MAX_CHARACTER_IMAGE_HEIGHT) {
-            imageHeight
-        } else {
-            context.resources.getDimension(R.dimen.character_image_height_default_dp).toInt()
-        }
+        params.width =  imageWidth
+        params.height = imageHeight
         imageView.layoutParams = params
         imageView.visibility = View.VISIBLE
     }
@@ -93,23 +84,29 @@ object ViewUtils {
         iconObject: HashMap<String, String>?,
         context: Context
     ): Pair<Int, Int> {
-        val defaultWidth =  context.resources.getDimension(R.dimen.character_image_width_default_dp).toInt()
-        val defaultHeight =  context.resources.getDimension(R.dimen.character_image_height_default_dp).toInt()
+        val defaultWidth = (context.resources.getDimension(R.dimen.character_image_width_default_dp) / context.resources.displayMetrics.density).toInt()
+        val defaultHeight =  (context.resources.getDimension(R.dimen.character_image_height_default_dp) / context.resources.displayMetrics.density).toInt()
         val widthKey = context.getString(R.string.response_key_icon_width)
         val heightKey = context.getString(R.string.response_key_icon_height)
-        val imageWidth = if (iconObject == null || !iconObject.containsKey(widthKey) ||
+        var imageWidth = if (iconObject == null || !iconObject.containsKey(widthKey) ||
             iconObject[widthKey] == null || iconObject[widthKey]?.length == 0
         ) {
             defaultWidth
         } else {
             Integer.parseInt(iconObject[widthKey] ?: defaultWidth.toString())
         }
-        val imageHeight = if (iconObject == null || !iconObject.containsKey(heightKey) ||
+        var imageHeight = if (iconObject == null || !iconObject.containsKey(heightKey) ||
             iconObject[heightKey] == null || iconObject[heightKey]?.length == 0
         ) {
             defaultHeight
         } else {
             Integer.parseInt(iconObject[heightKey] ?: defaultHeight.toString())
+        }
+        if (imageWidth > Constants.MAX_CHARACTER_IMAGE_WIDTH) {
+            imageWidth = Constants.MAX_CHARACTER_IMAGE_WIDTH
+        }
+        if (imageHeight > Constants.MAX_CHARACTER_IMAGE_HEIGHT) {
+            imageHeight = Constants.MAX_CHARACTER_IMAGE_HEIGHT
         }
         return Pair(imageWidth, imageHeight)
     }
