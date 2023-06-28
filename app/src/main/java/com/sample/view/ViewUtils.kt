@@ -85,37 +85,43 @@ object ViewUtils {
         context: Context
     ): Pair<Int, Int> {
         val defaultWidth = (context.resources.getDimension(R.dimen.character_image_width_default_dp)).toInt()
-        val defaultHeight =  (context.resources.getDimension(R.dimen.character_image_height_default_dp)).toInt()
-        val widthKey = context.getString(R.string.response_key_icon_width)
-        val heightKey = context.getString(R.string.response_key_icon_height)
-        var imageWidth = if (iconObject == null || !iconObject.containsKey(widthKey) ||
-            iconObject[widthKey] == null || iconObject[widthKey]?.length == 0
-        ) {
-            defaultWidth
-        } else {
-            Integer.parseInt(iconObject[widthKey] ?: defaultWidth.toString())
+        val defaultHeight = (context.resources.getDimension(R.dimen.character_image_height_default_dp)).toInt()
+        try {
+            val maxWidth = (context.resources.getDimension(R.dimen.character_image_width_max_dp)).toInt()
+            val maxHeight = (context.resources.getDimension(R.dimen.character_image_height_max_dp)).toInt()
+            val widthKey = context.getString(R.string.response_key_icon_width)
+            val heightKey = context.getString(R.string.response_key_icon_height)
+            var imageWidth = if (iconObject == null || !iconObject.containsKey(widthKey) ||
+                iconObject[widthKey] == null || iconObject[widthKey]?.isEmpty() ?: false
+            ) {
+                defaultWidth
+            } else {
+                Integer.parseInt(iconObject[widthKey].toString())
+            }
+            var imageHeight = if (iconObject == null || !iconObject.containsKey(heightKey) ||
+                iconObject[heightKey] == null || iconObject[heightKey]?.length == 0
+            ) {
+                defaultHeight
+            } else {
+                Integer.parseInt(iconObject[heightKey] ?: defaultHeight.toString())
+            }
+            if (imageWidth > maxWidth) {
+                imageWidth = maxWidth
+            }
+            if (imageHeight > maxHeight) {
+                imageHeight = maxHeight
+            }
+            // Assumes that a default image will be used so width and height can never be 0
+            if (imageWidth == 0) {
+                imageWidth = defaultWidth
+            }
+            if (imageHeight == 0) {
+                imageHeight = defaultHeight
+            }
+            return Pair(imageWidth, imageHeight)
+        } catch (e: NumberFormatException) {
+            return Pair(defaultWidth, defaultHeight)
         }
-        var imageHeight = if (iconObject == null || !iconObject.containsKey(heightKey) ||
-            iconObject[heightKey] == null || iconObject[heightKey]?.length == 0
-        ) {
-            defaultHeight
-        } else {
-            Integer.parseInt(iconObject[heightKey] ?: defaultHeight.toString())
-        }
-        if (imageWidth > Constants.MAX_CHARACTER_IMAGE_WIDTH) {
-            imageWidth = Constants.MAX_CHARACTER_IMAGE_WIDTH
-        }
-        if (imageHeight > Constants.MAX_CHARACTER_IMAGE_HEIGHT) {
-            imageHeight = Constants.MAX_CHARACTER_IMAGE_HEIGHT
-        }
-        // Assumes that a default image will be used so width and height can never be 0
-        if (imageWidth == 0) {
-            imageWidth = defaultWidth
-        }
-        if (imageHeight == 0) {
-            imageHeight = defaultHeight
-        }
-        return Pair(imageWidth, imageHeight)
     }
 
     // Returns a list with character items whose names or descriptions contain the text
